@@ -1,6 +1,12 @@
 
-JSDB_HOST = '127.0.0.1';
-JSDB_PORT = 33333;
+if ( typeof(JSDB_HOST) == 'undefined' ) { 
+	JSDB_HOST = '127.0.0.1';
+}
+
+if ( typeof(JSDB_PORT) == 'undefined' ) { 
+	JSDB_PORT = 22222;
+}
+
 HEARTBEAT_INTERVAL=5000;
 
 function log(msg) { 

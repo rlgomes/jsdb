@@ -1,6 +1,6 @@
-
 JSDB_HOST = '127.0.0.1';
 JSDB_PORT = 22222;
+
 HEARTBEAT_INTERVAL=5000;
 
 function log(msg) { 

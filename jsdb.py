@@ -122,12 +122,6 @@ class CLIReader(threading.Thread):
             cnt = cnt + 1
         print('')
 
-    def js(self,args):
-        if not(self.jsclient):
-            print("you're not connected to any jsdb client.")
-            return
-
-
     def join(self,args):
         if len(args) == 0:
             print("you need to specify a client id")

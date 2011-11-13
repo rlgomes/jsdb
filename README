@@ -1,4 +1,5 @@
-JSDB - javascript debugger
+JSDB - Javascript Debugger
+--------------------------
 
 This is a very simple debugging tool I created to facilitate debugging what is
 going on any webpage after its been loaded on any browser that supports 
@@ -10,4 +11,61 @@ This is as mentioned a very simple implementation and a lot of features can be
 added but for now it serves a very simple quick and dirty way of debugging 
 browsers that don't have debugging consoles (ie android, ios).
 
+Build
+-----
+
+Just run the "ant build" script to make an official build of the jsdb javascript
+code base. 
+
+Usage
+-----
+
+To start using the console just include the jsdb.js file in the header of all 
+of your HTML files like so:
+
+<script type="text/javascript" src="jsdb.js"></script>
+
+Make sure that the other js files are also accessible from the same directory 
+as they are being loaded by the jsdb base file.
+
+Before you open your page in the desired browser make sure that the 
+jsdbclient.js has the right port and host you're gong to be running the jsdb.py 
+console on. Of course this would be nicer if we could dynamically configure it 
+and there will be issues opened to track this. 
+
+Now you can start the jsdb.py console from command line like so:
+
+> python jsdb.py
+JSDB debugger listening at 22222
+jsdb started
+> 
+
+And once you open your page with the jsdb.js reference you should see something
+similar to the following:
+
+> 
+jsdb client js0 connected from {'url': 'http://localhost:8000/', 
+                                'platform': 'Linux i686', 
+                                'ctime': 1321154829564L, 
+                                'useragent': 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/535.8 (KHTML, like Gecko) Ubuntu/11.10 Chromium/17.0.932.0 Chrome/17.0.932.0 Safari/535.8'}
+> 
+
+You can now type in the jsdb console:
+
+> join js0
+connected to js0
+to disconnect type //exit
+all commands are executed on the client
+
+and all your following commands will be executed on that page allow you to do
+things such as:
+
+> document.title;
+JSDB Test Page
+> document.location.href;
+http://localhost:8000/
+> document.querySelector("title")
+[object HTMLTitleElement]
+> document.querySelector("title").innerHTML
+JSDB Test Page
 

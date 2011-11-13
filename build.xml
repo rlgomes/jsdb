@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- ====================================================================== 
-     Oct 2, 2011 3:19:53 PM                                                        
+     Oct 2, 2011 3:19:53 PM
 
-     project    
-     description
-                   
-     rlgomes                                                                
+     JSDB build script
+
+     author: rlgomes
      ====================================================================== -->
 
 <project name="project" default="build">
@@ -26,7 +25,6 @@
             <arg line="--srcdir src"/>
             <arg line="--dstdir build"/>
         </exec>
-        <antcall target="dist"/>
     </target>
 
     <target name="debug" depends="init" description="description">
@@ -35,8 +33,6 @@
             <arg line="--dstdir build"/>
             <arg line="--def DEBUG"/>
         </exec>
-
-        <antcall target="dist"/>
     </target>
 
     <target name="httpserver">
@@ -51,13 +47,9 @@
             <arg line="jsdb.py"/>
         </exec>
     </target>
-
-    <target name="dist">
-        <copy todir="build">
-            <fileset dir=".">
-                <include name="lib/**"/>
-            </fileset>
-        </copy>
+	
+    <target name="clean">
+        <delete dir="build"/>
     </target>
 
 </project>
