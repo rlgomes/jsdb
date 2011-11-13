@@ -1,0 +1,13 @@
+JSDB - javascript debugger
+
+This is a very simple debugging tool I created to facilitate debugging what is
+going on any webpage after its been loaded on any browser that supports 
+websockets and workers. This debugger consists of adding the script inclusion
+to the page you want to be able to inspect on and having executed the JSDB 
+debugger console before you load the page you're debugging.
+
+This is as mentioned a very simple implementation and a lot of features can be
+added but for now it serves a very simple quick and dirty way of debugging 
+browsers that don't have debugging consoles (ie android, ios).
+
+

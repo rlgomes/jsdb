@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ====================================================================== 
+     Oct 2, 2011 3:19:53 PM                                                        
+
+     project    
+     description
+                   
+     rlgomes                                                                
+     ====================================================================== -->
+
+<project name="project" default="build">
+    <description>
+            description
+    </description>
+
+    <target name="init">
+        <mkdir dir="build"/>
+    </target>
+
+    <!-- ================================= 
+          target: build
+         ================================= -->
+    <target name="build" depends="init" description="description">
+        <exec executable="scripts/jsmacro.py">
+            <arg line="--srcdir src"/>
+            <arg line="--dstdir build"/>
+        </exec>
+        <antcall target="dist"/>
+    </target>
+
+    <target name="debug" depends="init" description="description">
+        <exec executable="scripts/jsmacro.py">
+            <arg line="--srcdir src"/>
+            <arg line="--dstdir build"/>
+            <arg line="--def DEBUG"/>
+        </exec>
+
+        <antcall target="dist"/>
+    </target>
+
+    <target name="httpserver">
+        <exec executable="python" dir="build" vmlauncher="no">
+            <arg line="-m"/>
+            <arg line="SimpleHTTPServer"/>
+        </exec>
+    </target>
+
+    <target name="jsdb">
+        <exec executable="python" vmlauncher="no">
+            <arg line="jsdb.py"/>
+        </exec>
+    </target>
+
+    <target name="dist">
+        <copy todir="build">
+            <fileset dir=".">
+                <include name="lib/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+</project>
