@@ -1,14 +1,20 @@
-JSDB_HOST = '127.0.0.1';
-JSDB_PORT = 22222;
-
-HEARTBEAT_INTERVAL=5000;
 
 function log(msg) { 
 	postMessage({cmd:'log', data:msg});
 };
 
-function JSDBClient(name,href) {
+function JSDBClient(name, href, config) {
+	var HEARTBEAT_INTERVAL=5000;
+	var JSDB_HOST = '127.0.0.1';
+	var JSDB_PORT = 22222;
+	
+	if ( config ) {
+		if ( config['host'] ) { JSDB_HOST = config['host']; }
+		if ( config['port'] ) { JSDB_PORT = config['port']; }
+	}
+	
     var url = 'ws://' + JSDB_HOST + ':' + JSDB_PORT + '/test';
+    
 //@ifdef DEBUG
     log("connecting to " + url);
 //@end

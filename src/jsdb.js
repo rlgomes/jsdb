@@ -25,4 +25,6 @@ worker.addEventListener('message', function(e) {
     }
 }, false);
 
-worker.postMessage({'cmd':'start', 'href':document.location.href});
+worker.postMessage({cmd		: 'start',
+	                href	: document.location.href,
+	                config  : window.jsdb_config });

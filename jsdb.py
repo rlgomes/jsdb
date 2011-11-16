@@ -39,6 +39,8 @@ import readline
 import threading
 import json
 
+import argparse
+
 from twisted.internet import reactor
 from autobahn.websocket import WebSocketServerFactory, WebSocketServerProtocol
         
@@ -47,9 +49,6 @@ jscnt = 0
 
 global clireader
 clireader = None
-
-global PORT
-PORT = 22222
 
 global factory
 factory = None
@@ -122,7 +121,7 @@ class CLIReader(threading.Thread):
             cnt = cnt + 1
         print('')
 
-    def join(self,args):
+    def connect(self,args):
         if len(args) == 0:
             print("you need to specify a client id")
             return
@@ -174,7 +173,7 @@ class CLIReader(threading.Thread):
         global factory
 
         def completer(text, state):
-            values = { 'help', 'list', 'join', 'exit' }
+            values = { 'help', 'list', 'connect', 'exit' }
             matches = [ value for value in values if text in value ]
 
             try:
@@ -205,12 +204,26 @@ class CLIReader(threading.Thread):
             reactor.callFromThread(reactor.stop)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='JSDB Debug Console')
+    parser.add_argument('--port',
+                        metavar='port',
+                        dest='port',
+                        help='port to start the debugger console on. (defaults to 22222)')
+
+    args = parser.parse_args()
+   
+    port = args.port
+    if not(port): 
+        port = 22222
+    else:
+        port = int(port)
+     
     clireader = CLIReader()
     clireader.start()
 
     factory = WebSocketServerFactory()
     factory.protocol = WebSocketHandler
-    reactor.listenTCP(PORT, factory)
-    print('JSDB debugger listening at %d' % PORT)
+    reactor.listenTCP(port, factory)
+    print('JSDB debugger listening at %d' % port)
     reactor.run()
 
