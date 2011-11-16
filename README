@@ -52,7 +52,7 @@ jsdb client js0 connected from {'url': 'http://localhost:8000/',
 
 You can now type in the jsdb console:
 
-> join js0
+> connect js0
 connected to js0
 to disconnect type //exit
 all commands are executed on the client
