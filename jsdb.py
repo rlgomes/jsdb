@@ -40,6 +40,7 @@ import threading
 import json
 
 import argparse
+import logging
 
 from twisted.internet import reactor
 from autobahn.websocket import WebSocketServerFactory, WebSocketServerProtocol
@@ -99,13 +100,16 @@ class WebSocketHandler(WebSocketServerProtocol):
             pass
 #            logline('heartbeat from %s' % msg['from'])
 
+logging.basicConfig()
+
 class CLIReader(threading.Thread):
 
     running = True
     jsclient = None
     execid = 0
     lock = threading.Condition()
-
+    logger = logging.getLogger("jsdb")
+    
     def exit(self,args):
         global factory
         self.running = False
@@ -120,6 +124,16 @@ class CLIReader(threading.Thread):
             print(" * %s -> %s" % (jsid,connections[jsid]['from']))
             cnt = cnt + 1
         print('')
+        
+    def loglevel(self,args):
+        if args[0] == 'info':
+            self.logger.setLevel(logging.INFO)
+        elif args[0] == 'debug':
+            self.logger.setLevel(logging.DEBUG)
+        elif args[0] == 'warn':
+            self.logger.setLevel(logging.WARN)
+        else:
+            print("unknown log level %s" % args[0])
 
     def connect(self,args):
         if len(args) == 0:
@@ -147,10 +161,13 @@ class CLIReader(threading.Thread):
 
                 clireader.resp = None
                 self.lock.acquire()
+                start = time.time()*1000
                 self.jsclient.sendMessage(javascript)
 
                 # wait for response otherwise timeout after 10s
                 self.lock.wait(10000)
+                stop = time.time()*1000
+                self.logger.debug("request took %f ms" % (stop-start))
                 self.lock.release()
 
                 if clireader.resp:

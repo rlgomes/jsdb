@@ -10,6 +10,7 @@ self.addEventListener('message', function(e) {
         case 'start':
             var href = data.href;
             self.client = new JSDBClient('worker', href, data.config);
+            self.client.start();
             self.postMessage({ cmd: 'log', data: 'worker started' });
             break;
         case 'stop':

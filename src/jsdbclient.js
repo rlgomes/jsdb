@@ -4,7 +4,6 @@ function log(msg) {
 };
 
 function JSDBClient(name, href, config) {
-	var HEARTBEAT_INTERVAL=5000;
 	var JSDB_HOST = '127.0.0.1';
 	var JSDB_PORT = 22222;
 	
@@ -19,8 +18,9 @@ function JSDBClient(name, href, config) {
     log("connecting to " + url);
 //@end
     this.name = name;
-
-    var jsdb = {
+    this.url = url;
+    
+    var clientid = {
         client : {
             url         : href,
             platform    : navigator.platform,
@@ -29,12 +29,20 @@ function JSDBClient(name, href, config) {
         }
     };
 
-    this.jsdb = jsdb;
-    this.ws = new WebSocket(url);
+    this.clientid = clientid;
+}
+
+JSDBClient.prototype.start = function() { 
+	var HEARTBEAT_INTERVAL=5000;
+    this.ws = new WebSocket(this.url);
     ws = this.ws;
 
+    this.ws.name = this.name;
+    this.ws.clientid = this.clientid;
+    this.ws.isclosed = false;
+    
     this.ws.sendCmd = function(cmd) { 
-        cmd.id = jsdb;
+        cmd.id = this.clientid;
         ws.send(JSON.stringify(cmd));
     };
 
@@ -43,7 +51,7 @@ function JSDBClient(name, href, config) {
     };
 
     this.ws.onopen = function() {
-        cmd = { cmd : "register", id : jsdb };
+        cmd = { cmd : "register", id : this.clientid };
         this.send(JSON.stringify(cmd));
     };
     
@@ -52,8 +60,10 @@ function JSDBClient(name, href, config) {
     };
 
     this.ws.heartbeat = function heartbeat(ws) { 
-        ws.sendCmd({cmd:"heartbeat","from":name});
-        setTimeout(function() { this.heartbeat(ws); },HEARTBEAT_INTERVAL);
+        if ( !ws.isclosed ) {
+        	ws.sendCmd({cmd:"heartbeat","from": this.name});
+        	setTimeout(function() { this.heartbeat(ws); },HEARTBEAT_INTERVAL);
+        }
     };
     
     heartbeat = function() { ws.heartbeat(ws); };
@@ -62,13 +72,10 @@ function JSDBClient(name, href, config) {
     };
         
     setTimeout(function() { ws.heartbeat(ws); },HEARTBEAT_INTERVAL);
-}
-
-JSDBClient.prototype.start = function() { 
-    
 };
 
 JSDBClient.prototype.stop = function() { 
-    
+	this.ws.close();
+	this.ws.isclosed = true;
 };
 
